@@ -1,14 +1,24 @@
-import { combineReducers, configureStore, EnhancedStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, EnhancedStore, Reducer } from '@reduxjs/toolkit';
 import { networkSlice, NetworkState } from './network-slice';
 import { modalSlice, ModalState } from '@components/modals/modal-slice';
 import { searchSlice, SearchState } from '@features/search/search-slice';
 import { nextReduxCookieMiddleware, wrapMakeStore } from 'next-redux-cookie-wrapper';
 import { createWrapper } from 'next-redux-wrapper';
+import {
+  txFilters,
+  TxFilters,
+  TxFilterState,
+  TxFilterTypes,
+} from '@features/transactions-filter/transactions-filter-slice';
 
 const rootReducer = combineReducers({
   network: networkSlice.reducer,
   modal: modalSlice.reducer,
   search: searchSlice.reducer,
+  ...Object.values(TxFilterTypes).reduce(
+    (acc, txFilter) => ({ ...acc, [txFilter]: txFilters[txFilter].slice.reducer }),
+    {} as Record<TxFilterTypes, Reducer<TxFilterState>>
+  ),
 });
 
 export let store: EnhancedStore;
@@ -31,9 +41,10 @@ export const wrapper = createWrapper<AppStore>(makeStore);
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
 export type aa = ReturnType<typeof makeStore>;
-export interface RootState {
+export interface RootState extends TxFilters {
   network: NetworkState;
   modal: ModalState;
   search: SearchState;
 }
+
 export type AppDispatch = ReturnType<typeof makeStore>['dispatch'];

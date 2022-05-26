@@ -4,6 +4,7 @@ import packageJson from '../../package.json';
 
 import { Transaction } from '@stacks/stacks-blockchain-api-types';
 import { TxStatus } from './types/tx';
+import transactions from '@pages/transactions';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -131,3 +132,10 @@ export const TransactionStatus: Record<string, TxStatus> = {
   NON_CANONICAL: 'non_canonical',
   FAILED: 'failed',
 };
+
+export enum Pages {
+  HOME = 'HOME',
+  TRANSACTION = 'TRANSACTION',
+  BLOCK = 'BLOCK',
+  MICROBLOCK = 'MICROBLOCK',
+}
